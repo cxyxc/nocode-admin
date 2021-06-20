@@ -21,4 +21,19 @@ CREATE TABLE IF NOT EXISTS menus (
 
 INSERT INTO menus
     (name, path) VALUES
-    ('菜单', '/json-schema-page/menus');
+    ('菜单管理', '/json-schema-page/menus');
+
+-- 页面表
+CREATE TABLE IF NOT EXISTS pages (
+    id SERIAL NOT NULL,
+    key VARCHAR(50) NOT NULL,
+    schema jsonb NOT NULL
+);
+
+INSERT INTO pages
+    (key, path) VALUES
+    ('menus', '{"table":"menus","rowKey":"id","columns":[{"title":"名称","dataIndex":"name"},{"title":"路径","dataIndex":"path"}]}');
+
+INSERT INTO pages
+    (key, schema) VALUES
+    ('pages', '{"table":"pages","rowKey":"id","columns":[{"title":"页面标识","dataIndex":"key"},{"title":"页面结构","dataIndex":"schema","valueType":"jsonCode"}]}');

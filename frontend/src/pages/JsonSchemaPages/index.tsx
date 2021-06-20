@@ -3,16 +3,21 @@ import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { EditableProTable } from '@ant-design/pro-table';
 import { omit } from 'lodash';
-import jsonSchema from './jsonSchema';
 import { getNewRowKey, isNewRowKey } from './utils';
 import useApi from './useApi';
+import usePageInfo from './usePageInfo';
+import ProSkeleton from '@ant-design/pro-skeleton';
 
 const JsonSchemaPages: React.FC = () => {
+  const jsonSchema = usePageInfo()
   const actionRef = useRef<ActionType>();
+  const { handleQuery, handleAdd, handleUpdate, handleRemove } = useApi(jsonSchema, actionRef)
   const [current, setCurrent] = useState(1)
 
-  const { handleQuery, handleAdd, handleUpdate, handleRemove } = useApi(jsonSchema, actionRef)
-  const rowKey = jsonSchema.rowKey || 'id'
+  // 未获取到页面 schema 前渲染骨架屏操作
+  if (!jsonSchema.rowKey) return <ProSkeleton type="list" />
+
+  const rowKey = jsonSchema.rowKey
   const columns: ProColumns[] = jsonSchema.columns.concat([
     {
       title: '操作',

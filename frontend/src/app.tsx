@@ -27,6 +27,8 @@ export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  pageInfo?: any;
+  fetchPageInfo?: () => Promise<any>;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -37,12 +39,26 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
+  const fetchPageInfo = async () => {
+    try {
+      const res = await getData({
+        table: 'pages'
+      });
+      return res.data;
+    } catch (error) {
+      history.push(loginPath);
+    }
+    return undefined;
+  };
   // 如果是登录页面，不执行
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
+    const pageInfo = await fetchPageInfo();
     return {
       fetchUserInfo,
       currentUser,
+      fetchPageInfo,
+      pageInfo,
       settings: {},
     };
   }
@@ -135,17 +151,6 @@ const errorHandler = (error: ResponseError) => {
   }
   throw error;
 };
-
-const menuData = [
-  {
-    path: '/welcome',
-    name: 'welcome',
-  },
-  {
-    path: '/json-schema-page/table',
-    name: 'demo',
-  },
-];
 
 // https://umijs.org/zh-CN/plugins/plugin-request
 export const request: RequestConfig = {
