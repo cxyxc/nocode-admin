@@ -10,6 +10,7 @@ import { currentUser as queryCurrentUser } from './services/common/api';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import './services/interceptors.ts'
 import { apiUrlInterceptor } from './services/interceptors';
+import { getData } from './services/common/data';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -29,7 +30,7 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const currentUser = await queryCurrentUser();
+      const currentUser = await queryCurrentUser({});
       return currentUser;
     } catch (error) {
       history.push(loginPath);
@@ -135,6 +136,17 @@ const errorHandler = (error: ResponseError) => {
   throw error;
 };
 
+const menuData = [
+  {
+    path: '/welcome',
+    name: 'welcome',
+  },
+  {
+    path: '/json-schema-page/table',
+    name: 'demo',
+  },
+];
+
 // https://umijs.org/zh-CN/plugins/plugin-request
 export const request: RequestConfig = {
   errorHandler,
@@ -144,6 +156,14 @@ export const request: RequestConfig = {
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
+    menu: {
+      request: async () => {
+        const res = await getData({
+          table: 'menus'
+        })
+        return res.data
+      }
+    },
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     footerRender: () => <Footer />,
@@ -164,7 +184,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
             }}
           >
             openAPI 文档
-            </span>
+          </span>
         </>,
         <>
           <BookOutlined />
@@ -174,7 +194,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
             }}
           >
             业务组件文档
-            </span>
+          </span>
         </>,
       ]
       : [],

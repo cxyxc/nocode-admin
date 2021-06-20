@@ -17,7 +17,7 @@ export default [
       { path: '/admin/sub-page', name: '二级管理页', icon: 'smile', component: './Welcome' },
     ],
   },
-  { name: '动态页面', icon: 'table', path: '/list/:id', component: './JsonSchemaPages' },
+  { icon: 'table', path: '/json-schema-page/:table', component: './JsonSchemaPages' },
   { path: '/', redirect: '/welcome' },
   { component: './404' },
 ];
