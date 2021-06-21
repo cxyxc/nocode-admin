@@ -1,4 +1,4 @@
-import { useModel } from '@/.umi/plugin-model/useModel';
+import { useModel } from 'umi';
 import { ProColumns } from '@ant-design/pro-table';
 import { useParams } from 'umi';
 
